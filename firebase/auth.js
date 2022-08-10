@@ -10,8 +10,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     return getAuth().onIdTokenChanged(async (user) => {
-      console.log("auth changed");
-      console.log(user ? user.id : "Nothing");
       if (!user) {
         setUser(null);
         nookies.set(undefined, "token", "", {});

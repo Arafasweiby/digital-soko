@@ -1,13 +1,23 @@
 import React from "react";
-import { useAuth } from "../firebase/auth";
 import firebaseClient from "../firebase/client";
 import { getSession } from "../services/session";
+import { signOutUser } from "../services/user";
 
 export default function Home({ session }) {
   firebaseClient();
-  const { user } = useAuth();
-
-  return <div></div>;
+  if (session) {
+    return (
+      <button
+        onClick={async () => {
+          await signOutUser();
+        }}
+      >
+        Sign Out
+      </button>
+    );
+  } else {
+    return <div>Loading</div>;
+  }
 }
 
 export async function getServerSideProps(context) {
