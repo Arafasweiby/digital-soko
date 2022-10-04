@@ -9,9 +9,8 @@ export async function createUser({ email, password }) {
   try {
     const auth = getAuth();
     await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
   } catch (error) {
-    throw error.code.replace("auth/", "");
+    throw "Could not create user account";
   }
 }
 

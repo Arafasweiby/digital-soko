@@ -33,13 +33,13 @@ export default function Page() {
     setLoading(true);
     try {
       await createUser({ email: values.email, password: values.password });
+      router.push("/login");
       showToast({
         toast,
         title: "Success",
         description: "Account created successfuly",
         status: "success",
       });
-      router.push("/login");
     } catch (error) {
       showToast({
         toast,
