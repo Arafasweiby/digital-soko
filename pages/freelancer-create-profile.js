@@ -40,7 +40,7 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-soko-light-blue">
       <div className="bg-soko-blue h-24"></div>
-      <div className="py-16 ">
+      <div className="p-16 ">
         <div className="max-w-7xl w-full mx-auto">
           <Formik
             initialValues={initialValues}
