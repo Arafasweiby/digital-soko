@@ -7,7 +7,7 @@ export async function getSession(context) {
     const token = await verifyIdToken(cookies.token);
     const { uid, email } = token;
     return {
-      props: { session: `Your email is ${email} and your UID is ${uid}.` },
+      props: { session: { uid } },
     };
   } catch (err) {
     context.res.writeHead(302, { Location: "/login" });

@@ -1,4 +1,6 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAX4QJXVtaGA4tBHTyEJZP_Au0Tl8p0ebw",
   authDomain: "digital-soko.firebaseapp.com",
@@ -9,8 +11,5 @@ const firebaseConfig = {
   measurementId: "G-02RQMZX3W8",
 };
 
-export default function firebaseClient() {
-  if (!getApps.length) {
-    initializeApp(firebaseConfig);
-  }
-}
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);

@@ -4,6 +4,8 @@ import {
   signOut,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { app, db } from "../firebase/client";
 
 export async function createUser({ email, password }) {
   try {
@@ -20,6 +22,16 @@ export async function signInUser({ email, password }) {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     throw error.code.replace("auth/", "");
+  }
+}
+
+export async function getAccount(uid) {
+  const docRef = doc(db, "accounts", uid);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    throw "Account details do not exist";
   }
 }
 

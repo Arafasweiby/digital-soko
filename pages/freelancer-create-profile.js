@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import TextAreaWithValidationError from "../components/input/text_area_with_validation";
 import SelectMenu from "../components/input/select_menu";
+import { getSession } from "../services/session";
 
 const industries = [
   {
@@ -27,7 +28,7 @@ const workHours = [
   },
 ];
 
-export default function Page() {
+export default function Page({ session }) {
   const router = useRouter();
   const initialValues = {
     email: "",
@@ -167,7 +168,7 @@ export default function Page() {
                           </div>
                           <div className="px-4 py-3 bg-white text-right sm:px-6">
                             <button
-                              type="submit"
+                              type="button"
                               className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-soko-blue hover:bg-soko-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-soko-blue"
                             >
                               Save
@@ -185,4 +186,8 @@ export default function Page() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  return await getSession(context);
 }
