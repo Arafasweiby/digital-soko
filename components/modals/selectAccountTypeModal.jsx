@@ -29,7 +29,7 @@ function SelectAccountTypeModal({ isOpen, onClose }) {
               <p className="text-center">Lorem ipsum.</p>
               <div className="w-48">
                 <SolidButton
-                  label="Create"
+                  label="Create Profile"
                   onClick={() => {
                     router.push("/freelancer-create-profile");
                     onClose();
@@ -43,7 +43,7 @@ function SelectAccountTypeModal({ isOpen, onClose }) {
               <p className="text-center">Lorem ipsum.</p>
               <div className="w-48">
                 <SolidButton
-                  label="Create"
+                  label="Create Profile"
                   onClick={() => {
                     onClose();
                   }}

@@ -1,10 +1,12 @@
-import { useRouter } from "next/router";
-import InputWithValidationError from "../components/input/input_with_validation_error";
-import * as Yup from "yup";
 import { Formik } from "formik";
-import TextAreaWithValidationError from "../components/input/text_area_with_validation";
+import { useRouter } from "next/router";
+import * as Yup from "yup";
+import "yup-phone";
+import InputWithValidationError from "../components/input/input_with_validation_error";
 import SelectMenu from "../components/input/select_menu";
-import { getSession } from "../services/session";
+import TextAreaWithValidationError from "../components/input/text_area_with_validation";
+import UploadFilesField from "../components/input/upload_files";
+import NavBar from "../components/layout/navBar";
 
 const industries = [
   {
@@ -31,16 +33,32 @@ const workHours = [
 export default function Page({ session }) {
   const router = useRouter();
   const initialValues = {
+    firstName: "",
+    lastName: "",
     email: "",
-    password: "",
+    phoneNumber: "",
+    docs: [],
+    biography: "",
+    industry: "",
+    workHours: "",
   };
-  const validationSchema = Yup.object({});
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required("Required"),
+    lastName: Yup.string().email("Invalid email").required("Required"),
+    email: Yup.string().email("Invalid email").required("Required"),
+    phoneNumber: Yup.string()
+      .phone(undefined, undefined, "Invalid phone number")
+      .required("Required"),
+    docs: Yup.array().min(1, "Upload at least one document"),
+    biography: Yup.string().required("Required"),
+    industry: Yup.string().required("Required"),
+    workHours: Yup.string().required("Required"),
+  });
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(false);
   };
   return (
-    <div className="min-h-screen bg-soko-light-blue">
-      <div className="bg-soko-blue h-24"></div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="p-16 ">
         <div className="max-w-7xl w-full mx-auto">
           <Formik
@@ -95,50 +113,11 @@ export default function Page({ session }) {
                                 />
                               </div>
                             </div>
-
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Upload your CV
-                              </label>
-                              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                <div className="space-y-1 text-center">
-                                  <svg
-                                    className="mx-auto h-12 w-12 text-gray-400"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 48 48"
-                                    aria-hidden="true"
-                                  >
-                                    <path
-                                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                      strokeWidth={2}
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                  </svg>
-                                  <div className="flex text-sm text-gray-600">
-                                    <p>Drag & drop files or</p>
-
-                                    <label
-                                      htmlFor="file-upload"
-                                      className="pl-1 relative cursor-pointer bg-white rounded-md font-medium text-soko-blue hover:text-soko-blue focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-soko-blue underline"
-                                    >
-                                      <span>Browse</span>
-                                      <input
-                                        id="file-upload"
-                                        name="file-upload"
-                                        type="file"
-                                        className="sr-only"
-                                      />
-                                    </label>
-                                  </div>
-                                  <p className="text-xs text-gray-500">
-                                    Supported formats: Word, PDF
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
+                            <UploadFilesField
+                              id="upload-files"
+                              label="Upload your CV"
+                              name="docs"
+                            />
                             <div>
                               <TextAreaWithValidationError
                                 name="biography"
@@ -148,7 +127,6 @@ export default function Page({ session }) {
                                 defaultValue={""}
                               />
                             </div>
-
                             <div className="grid grid-cols-6 gap-6">
                               <div className="col-span-6 sm:col-span-3">
                                 <SelectMenu
@@ -168,8 +146,11 @@ export default function Page({ session }) {
                           </div>
                           <div className="px-4 py-3 bg-white text-right sm:px-6">
                             <button
-                              type="button"
                               className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-soko-blue hover:bg-soko-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-soko-blue"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                props.submitForm();
+                              }}
                             >
                               Save
                             </button>
@@ -188,6 +169,4 @@ export default function Page({ session }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  return await getSession(context);
-}
+Page.layout = NavBar;

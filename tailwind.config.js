@@ -8,6 +8,8 @@ module.exports = {
       colors: {
         "soko-light-blue": "#EFF4F9",
         "soko-blue": "#064789",
+        "soko-orange": "#fb9004",
+        "soko-dark-blue": "#04274a",
         "soko-green": "#11AF22",
       },
     },

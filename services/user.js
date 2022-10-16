@@ -1,11 +1,11 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
-  signOut,
+  getAuth,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { app, db } from "../firebase/client";
+import { auth, db } from "../lib/firebase";
 
 export async function createUser({ email, password }) {
   try {
@@ -18,7 +18,6 @@ export async function createUser({ email, password }) {
 
 export async function signInUser({ email, password }) {
   try {
-    const auth = getAuth();
     await signInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     throw error.code.replace("auth/", "");
@@ -37,7 +36,6 @@ export async function getAccount(uid) {
 
 export async function signOutUser() {
   try {
-    const auth = getAuth();
     await signOut(auth);
     window.location.href = "/";
   } catch (error) {

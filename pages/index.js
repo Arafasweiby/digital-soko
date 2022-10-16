@@ -1,20 +1,21 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import NavBar from "../components/layout/navBar";
 import SelectAccountTypeModal from "../components/modals/selectAccountTypeModal";
-import { useAuth } from "../firebase/auth";
-import { getSession } from "../services/session";
+import { auth } from "../lib/firebase";
 import { getAccount, signOutUser } from "../services/user";
 import { showToast } from "../utils/ui";
 
-export default function Home({ session }) {
+export default function Page() {
   const toast = useToast();
-  const { user } = useAuth();
+  const [user] = useAuthState(auth);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [account, setAccount] = useState();
 
   useEffect(() => {
-    if (session)
-      getAccount(session.uid)
+    if (user)
+      getAccount(user.uid)
         .then((value) => setAccount(value))
         .catch((error) => {
           if (error === "Account details do not exist") {
@@ -27,26 +28,16 @@ export default function Home({ session }) {
               status: "error",
             });
         });
-  }, [onOpen, session, toast]);
+  }, [onOpen, toast, user]);
 
-  if (session) {
-    return (
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <>
         <SelectAccountTypeModal isOpen={isOpen} onClose={onClose} />
-        <button
-          onClick={async () => {
-            await signOutUser();
-          }}
-        >
-          Sign Out
-        </button>
       </>
-    );
-  } else {
-    return <div>Loading</div>;
-  }
+    </div>
+  );
 }
 
-export async function getServerSideProps(context) {
-  return await getSession(context);
-}
+Page.auth = false;
+Page.layout = NavBar;

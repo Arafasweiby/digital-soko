@@ -29,9 +29,7 @@ export default function TextAreaWithValidationError({ label, ...props }) {
         )}
       </div>
       {meta.touched && meta.error && (
-        <p className="mt-2 text-sm text-red-600">
-          Your password must be less than 4 characters.
-        </p>
+        <p className="mt-2 text-sm text-red-500">{meta.error}</p>
       )}
     </div>
   );

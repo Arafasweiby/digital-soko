@@ -4,11 +4,10 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { HiLockClosed, HiMail } from "react-icons/hi";
 import * as Yup from "yup";
+import SolidButton from "../components/buttons/solidButton";
 import InputWithLeadingIcon from "../components/input/input_with_leading_icon";
 import { signInUser } from "../services/user";
 import { showToast } from "../utils/ui";
-import { Spinner } from "@chakra-ui/react";
-import SolidButton from "../components/buttons/solidButton";
 
 export default function Page() {
   const toast = useToast();
@@ -36,7 +35,7 @@ export default function Page() {
         description: "Account logged in successfuly",
         status: "success",
       });
-      router.push("/");
+      router.replace("/");
     } catch (error) {
       console.log(error);
       showToast({
