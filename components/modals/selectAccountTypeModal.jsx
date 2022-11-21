@@ -26,7 +26,7 @@ function SelectAccountTypeModal({ isOpen, onClose }) {
               <h2 className="text-xl font-semibold text-lipad-black">
                 Freelancer
               </h2>
-              <p className="text-center">Lorem ipsum.</p>
+              {/* <p className="text-center">Lorem ipsum.</p> */}
               <div className="w-48">
                 <SolidButton
                   label="Create Profile"
@@ -40,7 +40,7 @@ function SelectAccountTypeModal({ isOpen, onClose }) {
             <div className="flex flex-col items-center gap-3">
               <IoMdPerson className="h-16 w-16 text-lipad-green" />
               <h2 className="text-xl font-semibold text-lipad-black">Client</h2>
-              <p className="text-center">Lorem ipsum.</p>
+              {/* <p className="text-center">Lorem ipsum.</p> */}
               <div className="w-48">
                 <SolidButton
                   label="Create Profile"

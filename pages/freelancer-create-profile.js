@@ -2,6 +2,8 @@ import { Formik } from "formik";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import "yup-phone";
+import OutlineButton from "../components/buttons/outlineButton";
+import SolidButton from "../components/buttons/solidButton";
 import InputWithValidationError from "../components/input/input_with_validation_error";
 import SelectMenu from "../components/input/select_menu";
 import TextAreaWithValidationError from "../components/input/text_area_with_validation";
@@ -143,9 +145,18 @@ export default function Page({ session }) {
                                 />
                               </div>
                             </div>
-                          </div>
-                          <div className="px-4 py-3 bg-white text-right sm:px-6">
-                            <button
+                            <div className="w-fit flex justify-items-end gap-2 ml-auto">
+                              <OutlineButton
+                                label="Cancel"
+                                type="button"
+                                onClick={() => router.push("/")}
+                              />
+                              <SolidButton
+                                isSubmitting={props.isSubmitting}
+                                label="Save"
+                                type="submit"
+                              />
+                              {/* <button
                               className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-soko-blue hover:bg-soko-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-soko-blue"
                               onClick={(e) => {
                                 e.preventDefault();
@@ -153,7 +164,8 @@ export default function Page({ session }) {
                               }}
                             >
                               Save
-                            </button>
+                            </button> */}
+                            </div>
                           </div>
                         </div>
                       </form>

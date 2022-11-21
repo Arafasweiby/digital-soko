@@ -7,7 +7,8 @@ import { auth } from "../../lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOutUser } from "../../services/user";
 
-const navigation = [{ name: "Listings", href: "/", current: true }];
+// const navigation = [{ name: "Listings", href: "/", current: true }];
+const navigation = [];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Sign Out", href: "#" },
@@ -70,7 +71,7 @@ export default function NavBar() {
                 </div>
               </div>
               <div className="flex items-center">
-                <div className="flex-shrink-0">
+                {/* <div className="flex-shrink-0">
                   <button
                     type="button"
                     className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-orange-500"
@@ -81,7 +82,7 @@ export default function NavBar() {
                     />
                     <span>New Job</span>
                   </button>
-                </div>
+                </div> */}
                 <div className="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">
                   {/* Profile dropdown */}
                   {user && (

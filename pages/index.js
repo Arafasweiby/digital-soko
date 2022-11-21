@@ -43,22 +43,22 @@ export default function Page() {
     []
   );
 
-  // useEffect(() => {
-  //   if (user)
-  //     getAccount(user.uid)
-  //       .then((value) => setAccount(value))
-  //       .catch((error) => {
-  //         if (error === "Account details do not exist") {
-  //           onOpen();
-  //         } else
-  //           showToast({
-  //             toast,
-  //             title: "Error",
-  //             description: error,
-  //             status: "error",
-  //           });
-  //       });
-  // }, [onOpen, toast, user]);
+  useEffect(() => {
+    if (user)
+      getAccount(user.uid)
+        .then((value) => setAccount(value))
+        .catch((error) => {
+          if (error === "Account details do not exist") {
+            onOpen();
+          } else
+            showToast({
+              toast,
+              title: "Error",
+              description: error,
+              status: "error",
+            });
+        });
+  }, [onOpen, toast, user]);
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
