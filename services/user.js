@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../lib/firebase";
 
 export async function createUser({ email, password }) {
@@ -34,10 +34,14 @@ export async function getAccount(uid) {
   }
 }
 
+export async function updateAccount({ uid, data }) {
+  await setDoc(doc(db, "accounts", uid), data);
+}
+
 export async function signOutUser() {
   try {
     await signOut(auth);
-    window.location.href = "/";
+    window.location.href = "/login";
   } catch (error) {
     throw error.code.replace("auth/", "");
   }

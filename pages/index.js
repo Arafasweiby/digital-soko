@@ -8,16 +8,9 @@ import SimpleSelectMenu from "../components/input/simple_select_menu";
 import SwitchComponent from "../components/input/switch";
 import NavBar from "../components/layout/navBar";
 import SelectAccountTypeModal from "../components/modals/selectAccountTypeModal";
-import {
-  industries,
-  radioFilters,
-  recentJobs,
-  recentView,
-  workTime,
-  workTimes,
-} from "../lib/data";
+import { industries, radioFilters, recentJobs, workTimes } from "../lib/data";
 import { auth } from "../lib/firebase";
-import { getAccount, signOutUser } from "../services/user";
+import { getAccount } from "../services/user";
 import { showToast } from "../utils/ui";
 
 export default function Page() {
@@ -64,71 +57,73 @@ export default function Page() {
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
       <>
         <SelectAccountTypeModal isOpen={isOpen} onClose={onClose} />
-        <div className="grid grid-cols-12">
-          <div className="col-span-2 space-y-2">
-            <h3 className="font-bold text-lg">Filters</h3>
-            <RadioFilters
-              label="filters"
-              options={["All Offers", ...radioFilters]}
-              onChange={(event) =>
-                setQueries((prevState) => ({
-                  ...prevState,
-                  filter: event.target.value,
-                }))
-              }
-            />
-            <p className="font-bold">Work Time</p>
-            <RadioFilters
-              label="workTimes"
-              options={["All Times", ...workTimes]}
-              onChange={(event) =>
-                setQueries((prevState) => ({
-                  ...prevState,
-                  workTime: event.target.value,
-                }))
-              }
-            />
+        {account && (
+          <div className="grid grid-cols-12">
+            <div className="col-span-2 space-y-2">
+              <h3 className="font-bold text-lg">Filters</h3>
+              <RadioFilters
+                label="filters"
+                options={["All Offers", ...radioFilters]}
+                onChange={(event) =>
+                  setQueries((prevState) => ({
+                    ...prevState,
+                    filter: event.target.value,
+                  }))
+                }
+              />
+              <p className="font-bold">Work Time</p>
+              <RadioFilters
+                label="workTimes"
+                options={["All Times", ...workTimes]}
+                onChange={(event) =>
+                  setQueries((prevState) => ({
+                    ...prevState,
+                    workTime: event.target.value,
+                  }))
+                }
+              />
 
-            <Input
-              name="location"
-              id="location"
-              label="Location"
-              placeholder="Location"
-              onChange={debouncedChangeHandler}
-            />
-            <SimpleSelectMenu
-              name="industry"
-              id="industry"
-              label="Industry"
-              options={["All Types", ...industries]}
-              onChange={(event) =>
-                setQueries((prevState) => ({
-                  ...prevState,
-                  industry: event.target.value,
-                }))
-              }
-            />
-            <SwitchComponent
-              enabled={queries?.remote}
-              onChange={(value) =>
-                setQueries((prevState) => ({
-                  ...prevState,
-                  remote: value,
-                }))
-              }
-            />
+              <Input
+                name="location"
+                id="location"
+                label="Location"
+                placeholder="Location"
+                onChange={debouncedChangeHandler}
+              />
+              <SimpleSelectMenu
+                name="industry"
+                id="industry"
+                label="Industry"
+                options={["All Types", ...industries]}
+                onChange={(event) =>
+                  setQueries((prevState) => ({
+                    ...prevState,
+                    industry: event.target.value,
+                  }))
+                }
+              />
+              <SwitchComponent
+                enabled={queries?.remote}
+                onChange={(value) =>
+                  setQueries((prevState) => ({
+                    ...prevState,
+                    remote: value,
+                  }))
+                }
+              />
+            </div>
+            <div className="col-span-8"></div>
+            <div className="col-span-2 space-y-2">
+              <h3 className="font-bold text-lg">Recent View</h3>
+              {recentJobs.map((job, i) => (
+                <div key={i}>
+                  <p>{job.client}</p>
+                  <p className="font-semibold">{job.role}</p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="col-span-8"></div>
-          <div className="col-span-2 space-y-2">
-            <h3 className="font-bold text-lg">Recent View</h3>
-            {recentJobs.map((job, i) => (
-              <div key={i}>
-                <p>{job.client}</p>
-                <p className="font-semibold">{job.role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
       </>
     </div>
   );

@@ -20,7 +20,7 @@ export default function InputWithValidationError({ label, ...props }) {
             meta.touched && meta.error
               ? `border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500`
               : ``
-          }block w-full pr-10  focus:outline-none  sm:text-sm rounded-md`}
+          }block w-full pr-10  focus:outline-none placeholder-gray-300  sm:text-sm rounded-md`}
         />
         {meta.touched && meta.error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
