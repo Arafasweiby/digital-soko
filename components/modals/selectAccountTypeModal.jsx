@@ -45,6 +45,7 @@ function SelectAccountTypeModal({ isOpen, onClose }) {
                 <SolidButton
                   label="Create Profile"
                   onClick={() => {
+                    router.push("/client-create-profile");
                     onClose();
                   }}
                 />

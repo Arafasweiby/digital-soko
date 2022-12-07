@@ -94,7 +94,7 @@ export default function Page() {
                 name="industry"
                 id="industry"
                 label="Industry"
-                options={["All Types", ...industries]}
+                options={["All Types", industries.map((e) => e.name)]}
                 onChange={(event) =>
                   setQueries((prevState) => ({
                     ...prevState,
