@@ -18,7 +18,12 @@ export async function createUser({ email, password }) {
 
 export async function signInUser({ email, password }) {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return userCredential.user.uid;
   } catch (error) {
     throw error.code.replace("auth/", "");
   }

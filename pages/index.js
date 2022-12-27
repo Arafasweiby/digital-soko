@@ -1,23 +1,11 @@
-import { useDisclosure, useToast } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Input from "../components/input/input";
-import RadioFilters from "../components/input/radio_filters";
-import SimpleSelectMenu from "../components/input/simple_select_menu";
-import SwitchComponent from "../components/input/switch";
 import NavBar from "../components/layout/navBar";
-import SelectAccountTypeModal from "../components/modals/selectAccountTypeModal";
-import { industries, radioFilters, recentJobs, workTimes } from "../lib/data";
 import { auth } from "../lib/firebase";
-import { getAccount } from "../services/user";
-import { showToast } from "../utils/ui";
 
 export default function Page() {
-  const toast = useToast();
   const [user] = useAuthState(auth);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [account, setAccount] = useState();
   const [queries, setQueries] = useState();
 
   useEffect(() => {
@@ -36,28 +24,9 @@ export default function Page() {
     []
   );
 
-  useEffect(() => {
-    if (user)
-      getAccount(user.uid)
-        .then((value) => setAccount(value))
-        .catch((error) => {
-          if (error === "Account details do not exist") {
-            onOpen();
-          } else
-            showToast({
-              toast,
-              title: "Error",
-              description: error,
-              status: "error",
-            });
-        });
-  }, [onOpen, toast, user]);
-
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-      <>
-        <SelectAccountTypeModal isOpen={isOpen} onClose={onClose} />
-        {account && (
+      {/* {account && (
           <div className="grid grid-cols-12">
             <div className="col-span-2 space-y-2">
               <h3 className="font-bold text-lg">Filters</h3>
@@ -123,11 +92,10 @@ export default function Page() {
               ))}
             </div>
           </div>
-        )}
-      </>
+        )} */}
     </div>
   );
 }
 
-Page.auth = false;
+Page.auth = true;
 Page.layout = NavBar;

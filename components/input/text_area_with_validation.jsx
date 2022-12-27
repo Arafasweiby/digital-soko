@@ -20,7 +20,7 @@ export default function TextAreaWithValidationError({ label, ...props }) {
             meta.touched && meta.error
               ? `border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500`
               : ``
-          }block w-full pr-10  focus:outline-none  sm:text-sm rounded-md`}
+          }block w-full pr-10  focus:outline-none  sm:text-sm rounded-md p-2 border-gray-300`}
         />
         {meta.touched && meta.error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -29,7 +29,7 @@ export default function TextAreaWithValidationError({ label, ...props }) {
         )}
       </div>
       {meta.touched && meta.error && (
-        <p className="mt-2 text-sm text-red-500">{meta.error}</p>
+        <p className="mt-1 text-sm text-red-500">{meta.error}</p>
       )}
     </div>
   );

@@ -1,14 +1,15 @@
-import { Fragment } from "react";
+/* eslint-disable @next/next/no-img-element */
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { HiBell, HiMenu, HiX, HiPlusSm } from "react-icons/hi";
-import { useRouter } from "next/router";
 import Link from "next/link";
-import { auth } from "../../lib/firebase";
+import { useRouter } from "next/router";
+import { Fragment } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { HiMenu, HiX } from "react-icons/hi";
+import { auth } from "../../lib/firebase";
 import { signOutUser } from "../../services/user";
 
-// const navigation = [{ name: "Listings", href: "/", current: true }];
-const navigation = [];
+const navigation = [{ name: "Jobs", href: "/jobs", current: false }];
+
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Sign Out", href: "#" },
@@ -61,7 +62,7 @@ export default function NavBar() {
                         item.current
                           ? "text-white underline"
                           : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "px-3 py-2 rounded-md text-sm font-medium"
+                        "px-3 py-2 rounded-md text-lg font-medium"
                       )}
                       aria-current={item.current ? "page" : undefined}
                     >
@@ -71,18 +72,6 @@ export default function NavBar() {
                 </div>
               </div>
               <div className="flex items-center">
-                {/* <div className="flex-shrink-0">
-                  <button
-                    type="button"
-                    className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-orange-500"
-                  >
-                    <HiPlusSm
-                      className="-ml-1 mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    <span>New Job</span>
-                  </button>
-                </div> */}
                 <div className="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">
                   {/* Profile dropdown */}
                   {user && (

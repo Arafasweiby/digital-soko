@@ -16,7 +16,7 @@ export default function SelectMenu({ label, name, items, placeholder }) {
       ? items.find((e) => e.id === field.value)
       : {
           id: 0,
-          name: placeholder,
+          name: placeholder ?? "",
           value: "",
         }
   );
@@ -36,7 +36,13 @@ export default function SelectMenu({ label, name, items, placeholder }) {
               {label}
             </Listbox.Label>
             <div className="mt-1 relative">
-              <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-soko-blue focus:border-soko-blue sm:text-sm">
+              <Listbox.Button
+                className={`${
+                  meta.touched && meta.error
+                    ? "border border-red-400 focus:border-2 focus:border-red-400 focus:outline-none"
+                    : ""
+                } bg-white relative w-full border h-10 border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-soko-blue focus:border-soko-blue sm:text-sm `}
+              >
                 <span className="block truncate">{selected.name}</span>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                   <HiSelector
@@ -53,29 +59,21 @@ export default function SelectMenu({ label, name, items, placeholder }) {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                <Listbox.Options className="absolute z-10 mt-2 max-h-56 w-full overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                   {items.map((item, i) => (
                     <Listbox.Option
                       key={i}
                       className={({ active }) =>
                         classNames(
-                          active ? "text-white bg-soko-blue" : "text-gray-900",
-                          "cursor-default select-none relative py-2 pl-3 pr-9"
+                          active ? "bg-soko-blue text-white" : "text-gray-900",
+                          "relative cursor-default select-none py-2 pl-3 pr-9"
                         )
                       }
                       value={item}
                     >
                       {({ selected, active }) => (
                         <>
-                          <span
-                            className={classNames(
-                              selected ? "font-semibold" : "font-normal",
-                              "block truncate"
-                            )}
-                          >
-                            {item.name}
-                          </span>
-
+                          <span className="block truncate">{item.name}</span>
                           {selected ? (
                             <span
                               className={classNames(
@@ -97,7 +95,7 @@ export default function SelectMenu({ label, name, items, placeholder }) {
         )}
       </Listbox>
       {meta.touched && meta.error && (
-        <p className="mt-2 text-sm text-red-500">{meta.error}</p>
+        <p className="mt-1 text-sm text-red-500">{meta.error}</p>
       )}
     </div>
   );
