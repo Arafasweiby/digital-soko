@@ -1,76 +1,92 @@
-/* This example requires Tailwind CSS v2.0+ */
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  // More people...
-];
+import { useMemo } from "react";
+import { useTable } from "react-table";
+import numeral from "numeral";
 
-export default function ClientJobsTable() {
+import ClientJobsActions from "../actions/clientJobsActions";
+import moment from "moment";
+
+export default function ClientJobsTable(props) {
+  const data = useMemo(() => props.data, [props.data]);
+  const columns = useMemo(() => props.columns, [props.columns]);
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data });
   return (
     <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
         <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr>
-                <th
-                  scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                >
-                  Name
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
-                  Title
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
-                  Email
-                </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
-                  Role
-                </th>
-                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                  <span className="sr-only">Edit</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {people.map((person) => (
-                <tr key={person.email}>
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    {person.name}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {person.title}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {person.email}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {person.role}
-                  </td>
-                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a
-                      href="#"
-                      className="text-indigo-600 hover:text-indigo-900"
+          <table
+            {...getTableProps()}
+            className="min-w-full divide-y divide-gray-300"
+          >
+            <thead>
+              {headerGroups.map((headerGroup, i) => (
+                <tr key={i} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column, i) => (
+                    <th
+                      key={i}
+                      {...column.getHeaderProps()}
+                      className="py-5 pr-8 text-left text-xs font-black uppercase  text-lipad-grey"
                     >
-                      Edit<span className="sr-only">, {person.name}</span>
-                    </a>
-                  </td>
+                      {column.render("Header")}
+                    </th>
+                  ))}
                 </tr>
               ))}
+            </thead>
+            <tbody
+              {...getTableBodyProps()}
+              className="divide-y divide-gray-200 bg-white"
+            >
+              {rows.map((row, i) => {
+                prepareRow(row);
+                return (
+                  <tr key={i} {...row.getRowProps()}>
+                    {row.cells.map((cell) =>
+                      cell.column.Header === "Actions" ? (
+                        <td key={i + 1}>
+                          <ClientJobsActions
+                            id={props.data[i].id}
+                            data={data[i]}
+                            reloadDataHandler={props.reloadDataHandler}
+                            updateDataHandler={props.updateDataHandler}
+                          />
+                        </td>
+                      ) : cell.column.Header === "Compensation" ? (
+                        <td
+                          key={i + 2}
+                          {...cell.getCellProps()}
+                          className="whitespace-nowrap py-5 pr-8 text-sm"
+                        >
+                          {cell.value
+                            ? `KES ${numeral(cell.value).format("0,0.00")}`
+                            : "Not available"}
+                        </td>
+                      ) : cell.column.Header === "Deadline" ? (
+                        <td
+                          key={i + 3}
+                          {...cell.getCellProps()}
+                          className="whitespace-nowrap py-5 pr-8 text-sm"
+                        >
+                          {cell.value
+                            ? moment(cell.value)
+                                .local()
+                                .format("DD MMM YYYY HH:mm")
+                            : "Not available"}
+                        </td>
+                      ) : (
+                        <td
+                          key={i}
+                          {...cell.getCellProps()}
+                          className="whitespace-nowrap py-5 pr-8 text-sm"
+                        >
+                          {cell.value ?? "Not available"}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

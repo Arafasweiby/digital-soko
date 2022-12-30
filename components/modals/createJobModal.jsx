@@ -25,20 +25,21 @@ import InputWithValidationError from "../input/input_with_validation_error";
 import SelectMenu from "../input/select_menu";
 import TextAreaWithValidationError from "../input/text_area_with_validation";
 
-export default function CreateJobModal({ isOpen, onClose }) {
+export default function CreateJobModal({ isOpen, onClose, reloadDataHandler }) {
   const toast = useToast();
   const [user] = useAuthState(auth);
   const account = useRecoilValue(accountState);
+  const clientJob = JSON.parse(localStorage.getItem("clientJob"));
 
   const formInitialValues = {
-    title: "",
-    brief: "",
-    location: "",
-    timeNeeded: "",
-    experience: "",
-    type: "",
-    compensation: "",
-    deadline: "",
+    title: clientJob?.title ?? "",
+    brief: clientJob?.brief ?? "",
+    location: clientJob?.location ?? "",
+    timeNeeded: clientJob?.timeNeeded ?? "",
+    experience: clientJob?.experience ?? "",
+    type: clientJob?.type ?? "",
+    compensation: clientJob?.compensation ?? "",
+    deadline: clientJob?.deadline ?? "",
   };
   const formValidationSchema = Yup.object({
     title: Yup.string().required("Required"),
@@ -67,6 +68,7 @@ export default function CreateJobModal({ isOpen, onClose }) {
         description: "Job posting created successfuly",
         status: "success",
       });
+      reloadDataHandler();
       onClose();
     } catch (error) {
       showToast({

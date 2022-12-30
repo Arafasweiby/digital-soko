@@ -18,7 +18,11 @@ export default function AutoCompleteDropdown({
 }) {
   const [field, meta] = useField({ name });
 
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState(
+    meta.initialValue
+      ? items.find((item) => item.name === meta.initialValue)
+      : undefined
+  );
   const [query, setQuery] = useState("");
 
   const filteredItems =

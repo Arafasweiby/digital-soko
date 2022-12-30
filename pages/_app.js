@@ -40,8 +40,8 @@ function Auth({ children }) {
   useEffect(() => {
     if (error) router.replace("/login");
 
-    if (!user) router.replace("/login");
-  }, [error, router, user]);
+    if (!user && !loading) router.replace("/login");
+  }, [error, loading, router, user]);
 
   if (loading) return <p>Loading...</p>;
 
