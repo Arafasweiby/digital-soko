@@ -5,6 +5,7 @@ import {
   ModalOverlay,
   useToast,
 } from "@chakra-ui/react";
+import { Timestamp } from "firebase/firestore";
 
 import { Formik } from "formik";
 import React from "react";
@@ -40,6 +41,7 @@ export default function CreateJobModal({ isOpen, onClose, reloadDataHandler }) {
     type: clientJob?.type ?? "",
     compensation: clientJob?.compensation ?? "",
     deadline: clientJob?.deadline ?? "",
+    proposalCount: 0,
   };
   const formValidationSchema = Yup.object({
     title: Yup.string().required("Required"),
@@ -55,9 +57,9 @@ export default function CreateJobModal({ isOpen, onClose, reloadDataHandler }) {
   const onSubmit = async (values, { setSubmitting }) => {
     try {
       await createJob({
-        uid: user.uid,
         data: {
           ...values,
+          deadline: Date.parse(values.deadline),
           companyId: user.uid,
           companyName: account.companyName,
         },

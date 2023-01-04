@@ -1,6 +1,6 @@
 module.exports = {
   reactStrictMode: false,
-  swcMinify: false,
+  swcMinify: true,
   images: {
     domains: ["firebasestorage.googleapis.com"],
   },
