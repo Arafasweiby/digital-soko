@@ -1,11 +1,13 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilValue } from "recoil";
 import { auth } from "../lib/firebase";
+import { accountState } from "../recoil/account";
 import "../styles/globals.css";
 import theme from "../utils/theme";
+import { showToast } from "../utils/ui";
 
 export default function MyApp({ Component, pageProps }) {
   const Layout = Component.layout || (({ children }) => <>{children}</>);
@@ -14,7 +16,7 @@ export default function MyApp({ Component, pageProps }) {
     <RecoilRoot>
       <ChakraProvider theme={theme}>
         {Component.auth ? (
-          <Auth>
+          <Auth userType={Component.userType}>
             <div className="bg-soko-light-blue min-h-screen">
               <Layout />
               <Component {...pageProps} />
@@ -33,15 +35,16 @@ export default function MyApp({ Component, pageProps }) {
   );
 }
 
-function Auth({ children }) {
+function Auth({ userType, children }) {
+  const toast = useToast();
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
+  const account = useRecoilValue(accountState);
 
   useEffect(() => {
     if (error) router.replace("/login");
-
     if (!user && !loading) router.replace("/login");
-  }, [error, loading, router, user]);
+  }, [error, loading, router, user, userType]);
 
   if (loading) return <p>Loading...</p>;
 

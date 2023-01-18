@@ -13,9 +13,8 @@ export default function SelectMenu({ label, name, items, placeholder }) {
 
   const [selected, setSelected] = useState(
     field.value
-      ? items.find((e) => e.id === field.value)
+      ? items.find((e) => e.value === field.value)
       : {
-          id: 0,
           name: placeholder ?? "",
           value: "",
         }

@@ -38,13 +38,17 @@ export default function Page() {
         password: values.password,
       });
       const account = await getAccount(uid);
-      setAccount(account);
+      setAccount({
+        ...account,
+        type: account.companyProfile ? "client" : "freelancer",
+      });
       showToast({
         toast,
         title: "Success",
         description: "Account logged in successfuly",
         status: "success",
       });
+
       if (account.companyProfile) router.push("/jobs");
       else router.push("/");
     } catch (error) {

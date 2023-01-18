@@ -1,55 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
 import { useDisclosure } from "@chakra-ui/react";
-import { debounce } from "lodash";
 import moment from "moment";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { CgCalendarDates } from "react-icons/cg";
-import {
-  HiCalendar,
-  HiChevronRight,
-  HiLocationMarker,
-  HiOutlineUser,
-} from "react-icons/hi";
+import { HiCalendar, HiLocationMarker } from "react-icons/hi";
 import SolidButton from "../components/buttons/solidButton";
 import NavBar from "../components/layout/navBar";
 import CreateProposalModal from "../components/modals/createProposal";
 import { auth } from "../lib/firebase";
-import { getJobs } from "../services/jobs";
-import { positions } from "../utils/constants";
+import { getJobs, getProposals } from "../services/jobs";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [user] = useAuthState(auth);
   const [jobs, setJobs] = useState([]);
+  const [proposals, setProposals] = useState([]);
   const [selectedJob, setSelectedJob] = useState();
-  const [queries, setQueries] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
     getJobs()
       .then((data) => setJobs(data))
+      .then(() =>
+        getProposals({ uid: user.uid }).then((data) => setProposals(data))
+      )
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }, []);
-
-  useEffect(() => {
-    if (queries) console.log(queries);
-  }, [queries]);
-
-  const changeHandler = (event) => {
-    setQueries((prevState) => ({
-      ...prevState,
-      location: event.target.value,
-    }));
-  };
-
-  const debouncedChangeHandler = useMemo(
-    () => debounce(changeHandler, 300),
-    []
-  );
 
   return (
     <>
@@ -75,15 +54,19 @@ export default function Page() {
                       </div>
                       <p className="font-medium">{job.companyName}</p>
                     </div>
-                    <div className="w-fit">
-                      <SolidButton
-                        label={"Create Proposal"}
-                        onClick={() => {
-                          setSelectedJob(job);
-                          onOpen();
-                        }}
-                      />
-                    </div>
+                    {/* Checking if the freelancer has already made a proposal for
+                    this job. If they have, do not show the create proposal button */}
+                    {!proposals.map((e) => e.jobId).includes(job.id) && (
+                      <div className="w-fit">
+                        <SolidButton
+                          label={"Create Proposal"}
+                          onClick={() => {
+                            setSelectedJob(job);
+                            onOpen();
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-lg font-semibold  truncate">
@@ -132,4 +115,5 @@ export default function Page() {
 }
 
 Page.auth = true;
+Page.userType = "freelancer";
 Page.layout = NavBar;

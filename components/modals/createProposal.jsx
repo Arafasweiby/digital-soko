@@ -8,6 +8,7 @@ import {
 import { FieldValue, Timestamp } from "firebase/firestore";
 
 import { Formik } from "formik";
+import Router, { useRouter } from "next/router";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { CgClose } from "react-icons/cg";
@@ -22,6 +23,7 @@ import SolidButton from "../buttons/solidButton";
 import TextAreaWithValidationError from "../input/text_area_with_validation";
 
 export default function CreateProposalModal({ isOpen, onClose, job }) {
+  const router = useRouter();
   const toast = useToast();
   const [user] = useAuthState(auth);
   const account = useRecoilValue(accountState);
@@ -55,6 +57,7 @@ export default function CreateProposalModal({ isOpen, onClose, job }) {
         status: "success",
       });
       onClose();
+      router.reload();
     } catch (error) {
       showToast({
         toast,

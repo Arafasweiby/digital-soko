@@ -151,4 +151,5 @@ export default function Page() {
   );
 }
 
+Page.auth = true;
 Page.layout = NavBar;

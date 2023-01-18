@@ -5,13 +5,15 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { HiMenu, HiX } from "react-icons/hi";
+import { useRecoilValue } from "recoil";
 import { auth } from "../../lib/firebase";
+import { accountState } from "../../recoil/account";
 import { signOutUser } from "../../services/user";
 
 const navigation = [{ name: "Jobs", href: "/jobs", current: false }];
 
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
+  { name: "Your Profile", href: "" },
   { name: "Sign Out", href: "#" },
 ];
 
@@ -22,6 +24,7 @@ function classNames(...classes) {
 export default function NavBar() {
   const router = useRouter();
   const [user] = useAuthState(auth);
+  const account = useRecoilValue(accountState);
 
   return (
     <Disclosure as="nav" className="bg-blue-900">
@@ -111,9 +114,15 @@ export default function NavBar() {
                                       {item.name}
                                     </a>
                                   ) : (
-                                    <Link href={item.href} passHref>
+                                    <Link
+                                      href={
+                                        account.type === "client"
+                                          ? "/client-profile"
+                                          : "/freelancer-profile"
+                                      }
+                                      passHref
+                                    >
                                       <a
-                                        href={item.href}
                                         className={classNames(
                                           active ? "bg-gray-100" : "",
                                           "block px-4 py-2 text-sm text-gray-700"
@@ -197,7 +206,11 @@ export default function NavBar() {
                       <Disclosure.Button
                         key={item.name}
                         as="a"
-                        href={item.href}
+                        href={
+                          account.type === "client"
+                            ? "/client-profile"
+                            : "/freelancer-profile"
+                        }
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                       >
                         {item.name}

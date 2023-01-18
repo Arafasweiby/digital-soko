@@ -2,6 +2,7 @@ import { useToast } from "@chakra-ui/react";
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useRecoilValue } from "recoil";
 import { v4 } from "uuid";
 import * as Yup from "yup";
 import "yup-phone";
@@ -12,46 +13,27 @@ import SelectMenu from "../components/input/select_menu";
 import TextAreaWithValidationError from "../components/input/text_area_with_validation";
 import UploadFilesField from "../components/input/upload_files";
 import NavBar from "../components/layout/navBar";
+import { industries, workHours } from "../lib/data";
 import { auth } from "../lib/firebase";
 import { uploadFile, validatePhoneNumber } from "../lib/helpers";
+import { accountState } from "../recoil/account";
 import { updateAccount } from "../services/user";
 import { showToast } from "../utils/ui";
-
-const industries = [
-  {
-    name: "Technology",
-    value: "Technology",
-  },
-  {
-    name: "SEO",
-    value: "SEO",
-  },
-];
-
-const workHours = [
-  {
-    name: "Part Time ",
-    value: "Part Time ",
-  },
-  {
-    name: "Full Time  ",
-    value: "Full Time  ",
-  },
-];
 
 export default function Page() {
   const toast = useToast();
   const [user] = useAuthState(auth);
+  const account = useRecoilValue(accountState);
   const router = useRouter();
   const initialValues = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    cvDocUrl: [],
-    biography: "",
-    industry: "",
-    workHours: "",
+    firstName: account.firstName,
+    lastName: account.lastName,
+    email: account.email,
+    phoneNumber: account.phoneNumber,
+    cvDocUrl: [account.cvDocUrl],
+    biography: account.biography,
+    industry: account.industry,
+    workHours: account.workHours,
   };
   const validationSchema = Yup.object({
     firstName: Yup.string().required("Required"),
@@ -83,7 +65,7 @@ export default function Page() {
         description: "Successfuly updated account details",
         status: "success",
       });
-      router.push("/");
+      router.back();
     } catch (error) {
       showToast({
         toast,
@@ -109,7 +91,7 @@ export default function Page() {
                     <div className="md:col-span-1">
                       <div className="px-4 sm:px-0">
                         <h3 className="text-lg font-medium leading-6 text-gray-900">
-                          Create your Profile
+                          Update your Profile
                         </h3>
                       </div>
                     </div>

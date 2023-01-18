@@ -45,6 +45,19 @@ export async function getJobs() {
   return data;
 }
 
+export async function getProposals({ uid }) {
+  const q = query(
+    collection(db, "proposals"),
+    where("freelancerUid", "==", uid)
+  );
+  const querySnapshot = await getDocs(q);
+  let data = [];
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+}
+
 export async function getJobsByClient({ uid }) {
   const q = query(collection(db, "jobs"), where("companyId", "==", uid));
   const querySnapshot = await getDocs(q);
