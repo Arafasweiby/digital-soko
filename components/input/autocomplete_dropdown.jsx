@@ -56,7 +56,7 @@ export default function AutoCompleteDropdown({
                   meta.touched && meta.error
                     ? "border border-red-400 focus:border-2 focus:border-red-400"
                     : ""
-                } mt-1 relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left placeholder-[#CACACA] shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-soko-blue sm:text-sm h-10`}
+                } mt-1 relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-soko-blue sm:text-sm h-10`}
                 displayValue={(item) => selected?.name ?? ""}
                 onChange={(event) => setQuery(event.target.value)}
               />

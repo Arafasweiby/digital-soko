@@ -46,6 +46,22 @@ export async function getJobs() {
   return data;
 }
 
+export async function getJobsByFilters(values) {
+  var queries = [];
+  if (values.type != "") queries.push(where("type", "==", values.type));
+  if (values.location != "")
+    queries.push(where("location", "==", values.location));
+  if (values.experience != "")
+    queries.push(where("experience", "==", values.experience));
+  const q = query(collection(db, "jobs"), ...queries);
+  const querySnapshot = await getDocs(q);
+  let data = [];
+  querySnapshot.forEach((doc) => {
+    data.push({ id: doc.id, ...doc.data() });
+  });
+  return data;
+}
+
 export async function getProposals({ uid }) {
   const q = query(
     collection(db, "proposals"),

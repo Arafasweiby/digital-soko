@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SolidButton from "../components/buttons/solidButton";
 import PrimaryCard from "../components/cards/primaryCard";
+import JobsFilter from "../components/filter/jobsFilter";
 import NavBar from "../components/layout/navBar";
 import CreateJobModal from "../components/modals/createJobModal";
 import ClientJobsTable from "../components/tables/clientJobsTable";

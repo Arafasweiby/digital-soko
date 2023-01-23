@@ -6,10 +6,16 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { HiCalendar, HiLocationMarker } from "react-icons/hi";
 import SolidButton from "../components/buttons/solidButton";
 import PrimaryCard from "../components/cards/primaryCard";
+import JobsFilter from "../components/filter/jobsFilter";
 import NavBar from "../components/layout/navBar";
 import CreateProposalModal from "../components/modals/createProposal";
 import { auth } from "../lib/firebase";
-import { getFreelancerStats, getJobs, getProposals } from "../services/jobs";
+import {
+  getFreelancerStats,
+  getJobs,
+  getJobsByFilters,
+  getProposals,
+} from "../services/jobs";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,6 +46,15 @@ export default function Page() {
       .finally(() => setLoading(false));
   }, []);
 
+  function filterPaymentsHandler(values) {
+    console.log(values);
+    setLoading(true);
+    getJobsByFilters(values)
+      .then((data) => setJobs(data))
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
+  }
+
   return (
     <>
       <CreateProposalModal
@@ -47,7 +62,7 @@ export default function Page() {
         onClose={onClose}
         job={selectedJob}
       />
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-4">
         {loading == false && (
           <div className="flex gap-4 w-1/2">
             <PrimaryCard
@@ -60,7 +75,8 @@ export default function Page() {
             />
           </div>
         )}
-        <div className="bg-white shadow overflow-hidden sm:rounded-md mt-4">
+        <JobsFilter filterPaymentsHandler={filterPaymentsHandler} />
+        <div className="bg-white shadow overflow-hidden sm:rounded-md">
           <ul role="list" className="divide-y divide-gray-200">
             {jobs.map((job, i) => (
               <li key={i}>
