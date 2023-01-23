@@ -46,6 +46,7 @@ export default function CreateProposalModal({ isOpen, onClose, job }) {
           freelancerEmail: user.email,
           freelancerPhotoUrl: user.photoURL,
           jobId: job.id,
+          companyId: job.companyId,
           applicationDate: Date.now(),
           status: "pending",
         },

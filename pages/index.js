@@ -5,10 +5,11 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { HiCalendar, HiLocationMarker } from "react-icons/hi";
 import SolidButton from "../components/buttons/solidButton";
+import PrimaryCard from "../components/cards/primaryCard";
 import NavBar from "../components/layout/navBar";
 import CreateProposalModal from "../components/modals/createProposal";
 import { auth } from "../lib/firebase";
-import { getJobs, getProposals } from "../services/jobs";
+import { getFreelancerStats, getJobs, getProposals } from "../services/jobs";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -18,6 +19,10 @@ export default function Page() {
   const [proposals, setProposals] = useState([]);
   const [selectedJob, setSelectedJob] = useState();
   const [loading, setLoading] = useState(true);
+  const [statistics, setStatistics] = useState({
+    jobsDone: 0,
+    clientsWorkedWith: 0,
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -25,6 +30,11 @@ export default function Page() {
       .then((data) => setJobs(data))
       .then(() =>
         getProposals({ uid: user.uid }).then((data) => setProposals(data))
+      )
+      .then(() =>
+        getFreelancerStats({ uid: user.uid }).then((data) =>
+          setStatistics(data)
+        )
       )
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
@@ -38,7 +48,19 @@ export default function Page() {
         job={selectedJob}
       />
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        <div className="bg-white shadow overflow-hidden sm:rounded-md">
+        {loading == false && (
+          <div className="flex gap-4 w-1/2">
+            <PrimaryCard
+              value={statistics.jobsDone}
+              description={"Jobs Done"}
+            />
+            <PrimaryCard
+              value={statistics.clientsWorkedWith}
+              description={"Clients Worked For"}
+            />
+          </div>
+        )}
+        <div className="bg-white shadow overflow-hidden sm:rounded-md mt-4">
           <ul role="list" className="divide-y divide-gray-200">
             {jobs.map((job, i) => (
               <li key={i}>
@@ -56,7 +78,7 @@ export default function Page() {
                     </div>
                     {/* Checking if the freelancer has already made a proposal for
                     this job. If they have, do not show the create proposal button */}
-                    {!proposals.map((e) => e.jobId).includes(job.id) && (
+                    {!proposals.map((e) => e.jobId).includes(job.id) ? (
                       <div className="w-fit">
                         <SolidButton
                           label={"Create Proposal"}
@@ -65,6 +87,22 @@ export default function Page() {
                             onOpen();
                           }}
                         />
+                      </div>
+                    ) : (
+                      <div>
+                        <p
+                          className={`${
+                            proposals.find((e) => e.jobId == job.id).status ==
+                            "rejected"
+                              ? "bg-red-400"
+                              : proposals.find((e) => e.jobId == job.id)
+                                  .status == "accepted"
+                              ? "bg-green-400"
+                              : "bg-soko-blue"
+                          } px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full  text-white capitalize`}
+                        >
+                          {proposals.find((e) => e.jobId == job.id).status}
+                        </p>
                       </div>
                     )}
                   </div>

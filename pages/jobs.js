@@ -2,11 +2,12 @@ import { useDisclosure } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SolidButton from "../components/buttons/solidButton";
+import PrimaryCard from "../components/cards/primaryCard";
 import NavBar from "../components/layout/navBar";
 import CreateJobModal from "../components/modals/createJobModal";
 import ClientJobsTable from "../components/tables/clientJobsTable";
 import { auth } from "../lib/firebase";
-import { getJobsByClient } from "../services/jobs";
+import { getClientStats, getJobsByClient } from "../services/jobs";
 import { clientJobsColumns } from "../utils/constants";
 
 export default function Page() {
@@ -14,12 +15,19 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [queryParameters, setQueryParameters] = useState({});
   const [data, setData] = useState([]);
+  const [statistics, setStatistics] = useState({
+    jobsPosted: 0,
+    freelancersHired: 0,
+  });
   const [user] = useAuthState(auth);
 
   useEffect(() => {
     setLoading(true);
     getJobsByClient({ uid: user.uid })
       .then((data) => setData(data))
+      .then(() =>
+        getClientStats({ uid: user.uid }).then((data) => setStatistics(data))
+      )
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }, [user.uid, queryParameters]);
@@ -48,6 +56,18 @@ export default function Page() {
             />
           </div>
         </div>
+        {loading == false && (
+          <div className="flex gap-4 w-1/2">
+            <PrimaryCard
+              value={statistics.jobsPosted}
+              description={"Jobs Posted"}
+            />
+            <PrimaryCard
+              value={statistics.freelancersHired}
+              description={"Freelancers Hired"}
+            />
+          </div>
+        )}
         {loading ? (
           <p>Loading jobs...</p>
         ) : (

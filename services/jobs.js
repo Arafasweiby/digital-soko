@@ -10,6 +10,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import _ from "lodash";
 import { db } from "../lib/firebase";
 
 export async function createJob({ data }) {
@@ -65,6 +66,44 @@ export async function getJobsByClient({ uid }) {
   querySnapshot.forEach((doc) => {
     data.push({ id: doc.id, ...doc.data() });
   });
+  return data;
+}
+
+export async function getClientStats({ uid }) {
+  let data = { jobsPosted: 0, freelancersHired: 0 };
+
+  let q = query(collection(db, "jobs"), where("companyId", "==", uid));
+  let querySnapshot = await getDocs(q);
+  data.jobsPosted = querySnapshot.size;
+
+  q = query(collection(db, "proposals"), where("companyId", "==", uid));
+  querySnapshot = await getDocs(q);
+  let temp = [];
+  querySnapshot.forEach((doc) => {
+    temp.push(doc.freelancerUid);
+  });
+  data.freelancersHired = _.uniq(temp).length;
+  return data;
+}
+
+export async function getFreelancerStats({ uid }) {
+  let data = { jobsDone: 0, clientsWorkedWith: 0 };
+
+  let q = query(
+    collection(db, "proposals"),
+    where("freelancerUid", "==", uid),
+    where("status", "==", "accepted")
+  );
+  let querySnapshot = await getDocs(q);
+  data.jobsDone = querySnapshot.size;
+
+  q = query(collection(db, "proposals"), where("freelancerUid", "==", uid));
+  querySnapshot = await getDocs(q);
+  let temp = [];
+  querySnapshot.forEach((doc) => {
+    temp.push(doc.companyId);
+  });
+  data.clientsWorkedWith = _.uniq(temp).length;
   return data;
 }
 
